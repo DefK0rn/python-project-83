@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализатор страниц</title>
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex: 1 0 auto;
+        }
+        footer {
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid container-lg">
+            <a class="navbar-brand text-white-50 fs-5" href="/">Анализатор страниц</a>
+            <div class="navbar-nav me-auto">
+                <a class="nav-link text-white-50" href="/urls">Сайты</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container-lg d-flex align-items-start justify-content-center pt-5">
+        <div class="card p-5 w-100 shadow-sm bg-white" style="max-width: 800px;">
+            <div class="card-body p-0">
+                <h1 class="display-4 fw-normal mb-3">Анализатор страниц</h1>
+                <p class="text-muted fs-5 mb-4">Бесплатно проверяйте сайты на SEO-пригодность</p>
+                
+                <form action="/urls" method="post" class="row g-3">
+                    <div class="col">
+                        <input type="url" name="url" class="form-control form-control-lg text-muted" placeholder="https://www.example.com" required>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary btn-lg px-4 text-uppercase fw-medium">Проверить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="border-top py-3 bg-white mt-auto">
+        <div class="container text-center">
+            <a href="https://hexlet.io" target="_blank" class="text-decoration-none text-primary">Hexlet</a>
+        </div>
+    </footer>
+
+    <script src="https://yastatic.net" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
