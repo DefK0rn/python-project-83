@@ -1,0 +1,7 @@
+.venv
+.env
+.ruff_cache
+asciinema
+htmlcov
+.pytest_cache
+__pycache__/

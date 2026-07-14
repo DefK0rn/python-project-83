@@ -1,0 +1,40 @@
+name: page_analyzer CI
+
+on:
+  - push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python & uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: '3.13'
+
+        # make depends on uv
+      - name: Install dependencies
+        run: |
+          make install
+
+      - name: Run linter and pytest
+        run: |
+          make check
+
+      - name: Run test coverage
+        env:
+          SECRET_KEY: 'github-actions-project-83-secret-key'
+        run: |
+          make test-coverage
+
+      #- name: Install tox and any other packages
+      #  run: |
+      #    pip install tox
+      #- name: Run tox
+      #  run: tox -e py
+      #- name: SonarQube Scan
+      #  uses: SonarSource/sonarqube-scan-action@v7
+      #  env:
+      #    SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
