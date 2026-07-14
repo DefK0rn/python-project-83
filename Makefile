@@ -8,10 +8,10 @@ check:
 	uv run ruff check
 
 test-coverage:
-	uv run pytest --cov=gendiff --cov-report xml
+	uv run pytest --cov=page_analyzer --cov-report xml
 
 test-coverage-html:
-	uv run pytest --cov=gendiff --cov-report=html
+	uv run pytest --cov=page_analyzer --cov-report=html
 
 PORT ?= 8000
 start:
