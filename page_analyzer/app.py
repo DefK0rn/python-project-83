@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
-DATABASE_URL = os.getenv('DATABASE_URL')
+DATABASE_URL = os.getenv('DATABASE_URL', "postgresql://localhost:5432/fake_db")
 conn = psycopg.connect(DATABASE_URL)
 
 
