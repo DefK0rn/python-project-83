@@ -20,6 +20,8 @@ def check_url_status(url_address):
             meta_tag = soup.find('meta', attrs={'name': 'description'})
             if meta_tag:
                 result['description'] = meta_tag.get('content')[:255]
+            else:
+                result['description'] = ""
 
         if 400 <= result['status_code'] < 600:
             result['status_code'] = None
