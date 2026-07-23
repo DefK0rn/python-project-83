@@ -86,6 +86,9 @@ def test_urls_show_page_success(monkeypatch):
     })
     monkeypatch.setattr(repo, 'find_url_by_id', mock_find_url_by_id)
 
+    mock_find_checks_by_url = MagicMock(return_value=[])
+    monkeypatch.setattr(repo, 'find_checks_by_url_id', mock_find_checks_by_url)
+
     with app.test_client() as client:
         response = client.get('/urls/42')
         assert response.status_code == 200
@@ -101,6 +104,9 @@ def test_urls_show_page_not_found(monkeypatch):
 
     mock_find_url_by_id = MagicMock(return_value=None)
     monkeypatch.setattr(repo, 'find_url_by_id', mock_find_url_by_id)
+
+    mock_find_checks_by_url = MagicMock(return_value=[])
+    monkeypatch.setattr(repo, 'find_checks_by_url_id', mock_find_checks_by_url)
 
     with app.test_client() as client:
         response = client.get('/urls/999')
