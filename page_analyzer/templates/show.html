@@ -8,15 +8,15 @@
             <table class="table table-bordered table-hover">
                 <tbody>
                     <tr>
-                        <td class="w-25">ID</td>
+                        <th scope="row">ID</th>
                         <td>{{ url.id }}</td>
                     </tr>
                     <tr>
-                        <td>Имя</td>
+                        <th scope="row">Имя</th>
                         <td>{{ url.name }}</td>
                     </tr>
                     <tr>
-                        <td>Дата создания</td>
+                        <th scope="row">Дата создания</th>
                         <td>{{ url.created_at }}</td>
                     </tr>
                 </tbody>
@@ -44,7 +44,7 @@
                 <tbody>
                     {% for url_check in url_checks %}
                     <tr>
-                        <td scope="row" class="px-4 text-muted fw-normal">{{ url_check.id }}</td>
+                        <td class="px-4 text-muted fw-normal">{{ url_check.id }}</td>
                         <td class="px-4 text-muted">{{ url_check.status_code if url_check.status_code else '' }}</td>
                         <td class="px-4 text-muted">{{ (url_check.h1 if url_check.h1 else '') | truncate(200) }}</td>
                         <td class="px-4 text-muted">{{ (url_check.title if url_check.title else '') | truncate(200) }}</td>

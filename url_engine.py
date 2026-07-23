@@ -6,7 +6,12 @@ from bs4 import BeautifulSoup
 
 def check_url_status(url_address):
 
-    result = {}
+    result = {
+        'status_code': None,
+        'h1': "",
+        'title': "",
+        'description': ""
+    }
 
     try:
         response = requests.get(url_address, timeout=5, allow_redirects=True)
@@ -21,9 +26,8 @@ def check_url_status(url_address):
 
             meta_tag = soup.find('meta', attrs={'name': 'description'})
             if meta_tag:
-                result['description'] = meta_tag.get('content')[:255]
-            else:
-                result['description'] = ""
+                if meta_tag.get('content'):
+                    result['description'] = meta_tag.get('content')[:255]
 
         if 400 <= result['status_code'] < 600:
             result['status_code'] = None

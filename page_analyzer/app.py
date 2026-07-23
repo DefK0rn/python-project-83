@@ -20,7 +20,9 @@ load_dotenv()
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SECRET_KEY'] = os.getenv(
+    'SECRET_KEY', 'dev-key-placeholder-never-use-in-prod'
+)
 
 
 def get_db_connection():
@@ -32,12 +34,12 @@ def get_db_connection():
 repo = UrlRepository(get_db_connection)
 
 
-@app.route("/")
+@app.get("/")
 def index():
     return render_template("index.html")
 
 
-@app.route('/urls', methods=['GET'])
+@app.get('/urls')
 def urls_get():
 
     urls = repo.get_content()
@@ -76,7 +78,7 @@ def urls_post():
     return redirect(url_for('urls_show', id=url_data['id']), code=302)
 
 
-@app.route('/urls/<id>')
+@app.get('/urls/<id>')
 def urls_show(id):
 
     url = repo.find_url_by_id(id)
