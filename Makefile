@@ -8,10 +8,7 @@ check:
 	uv run ruff check
 
 test-coverage:
-	uv run pytest -rs --cov=page_analyzer --cov-report xml
-
-test-coverage-html:
-	uv run pytest -rs --cov=page_analyzer --cov-report=html
+	uv run pytest -rs --cov=page_analyzer
 
 PORT ?= 8000
 start:

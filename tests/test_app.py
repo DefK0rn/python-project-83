@@ -139,7 +139,7 @@ def test_urls_post_validation_empty(monkeypatch):
         assert response.status_code == 200
         
         html = response.data.decode('utf-8')
-        assert 'Сайт не может быть пустым' in html
+        assert 'Страница не может быть пустой' in html
 
 
 # Проверяем валидацию сайта
@@ -150,7 +150,7 @@ def test_urls_post_validation_invalid_url(monkeypatch):
         assert response.status_code == 200
         
         html = response.data.decode('utf-8')
-        assert 'Указанный адрес сайта не прошел валидацию' in html
+        assert 'Некорректный URL' in html
 
 
 # Проверяем валидацию на уникальность сайта
@@ -163,7 +163,7 @@ def test_urls_post_validation_duplicate(monkeypatch):
         assert response.status_code == 200
         
         html = response.data.decode('utf-8')
-        assert 'Указанный адрес сайта был добавлен ранее' in html
+        assert 'Страница уже существует' in html
 
 
 # Проверяем валидацию на длину адреса сайта
@@ -177,4 +177,4 @@ def test_urls_post_validation_too_long(monkeypatch):
         assert response.status_code == 200
         
         html = response.data.decode('utf-8')
-        assert 'Длина адреса сайта не может быть свыше 255 символов' in html
+        assert 'Длина страницы не может быть свыше 255 символов' in html
