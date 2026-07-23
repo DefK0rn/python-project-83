@@ -1,5 +1,8 @@
+from unittest.mock import MagicMock
+
 import page_analyzer
 from page_analyzer import app
+from page_analyzer.app import get_db_connection, repo
 
 
 def test_app_at_package_level():
@@ -40,3 +43,129 @@ def test_index_page_content():
         
         # Проверяем гиперссылку в подвале
         assert 'href="https://hexlet.io"' in html
+
+
+# Проверяем подключение к базе данных
+def test_get_db_connection_success(monkeypatch):
+    fake_url = "postgresql://fake_user:fake_pass@localhost:5432/fake_db"
+    monkeypatch.setenv("DATABASE_URL", fake_url)
+
+    mock_connect = MagicMock()
+    
+    monkeypatch.setattr("psycopg.connect", mock_connect)
+
+    get_db_connection()
+
+    mock_connect.assert_called_once_with(fake_url)
+
+
+# Проверяем странцу со списком сайтов
+def test_urls_get_page(monkeypatch):
+    mock_get_content = MagicMock(return_value=[
+        {'id': 1, 'name': 'https://hexlet.io', 'created_at': '2026-02-20'},
+        {'id': 2, 'name': 'https://google.com', 'created_at': '2026-02-21'}
+    ])
+    monkeypatch.setattr(repo, 'get_content', mock_get_content)
+
+    with app.test_client() as client:
+        response = client.get('/urls')
+        assert response.status_code == 200
+        
+        html = response.data.decode('utf-8')
+        assert 'https://hexlet.io' in html
+        assert 'https://google.com' in html
+        mock_get_content.assert_called_once()
+
+
+# Проверяем страницу сайта по id
+def test_urls_show_page_success(monkeypatch):
+    mock_find_by_id = MagicMock(return_value={
+        'id': 42, 
+        'name': 'https://github.com', 
+        'created_at': '2026-02-22'
+    })
+    monkeypatch.setattr(repo, 'find_by_id', mock_find_by_id)
+
+    with app.test_client() as client:
+        response = client.get('/urls/42')
+        assert response.status_code == 200
+        
+        html = response.data.decode('utf-8')
+        assert 'Сайт: https://github.com' in html
+        assert '42' in html
+        mock_find_by_id.assert_called_once_with('42')
+
+
+# Проверяем ошибку 404, когда id нет в базе
+def test_urls_show_page_not_found(monkeypatch):
+
+    mock_find_by_id = MagicMock(return_value=None)
+    monkeypatch.setattr(repo, 'find_by_id', mock_find_by_id)
+
+    with app.test_client() as client:
+        response = client.get('/urls/999')
+        assert response.status_code == 404
+        
+        html = response.data.decode('utf-8')
+
+        assert 'Сайт не найден' in html
+        assert '404' in html
+
+
+# Проверяем успех добавления сайта
+def test_urls_post_success(monkeypatch):
+    monkeypatch.setattr(repo, 'find_by_name', MagicMock(return_value=None))
+    
+    mock_save = MagicMock(return_value=100)
+    monkeypatch.setattr(repo, 'save', mock_save)
+
+    with app.test_client() as client:
+        response = client.post('/urls', data={'url': 'https://yandex.ru'})
+        
+        assert response.status_code == 302
+        assert response.headers['Location'] == '/urls/100'
+
+
+# Проверяем валидацию на пустой сайт
+def test_urls_post_validation_empty(monkeypatch):
+    with app.test_client() as client:
+        response = client.post('/urls', data={'url': ''})
+        assert response.status_code == 200
+        
+        html = response.data.decode('utf-8')
+        assert 'Сайт не может быть пустым' in html
+
+
+# Проверяем валидацию сайта
+def test_urls_post_validation_invalid_url(monkeypatch):
+    with app.test_client() as client:
+        response = client.post('/urls', data={'url': 'not-a-valid-url'})
+        assert response.status_code == 200
+        
+        html = response.data.decode('utf-8')
+        assert 'Указанный адрес сайта не прошел валидацию' in html
+
+
+# Проверяем валидацию на уникальность сайта
+def test_urls_post_validation_duplicate(monkeypatch):
+    mock_find_by_name = MagicMock(return_value={'id': 1, 'name': 'https://hexlet.io'})
+    monkeypatch.setattr(repo, 'find_by_name', mock_find_by_name)
+
+    with app.test_client() as client:
+        response = client.post('/urls', data={'url': 'https://hexlet.io'})
+        assert response.status_code == 200
+        
+        html = response.data.decode('utf-8')
+        assert 'Указанный адрес сайта был добавлен ранее' in html
+
+
+# Проверяем валидацию на длину адреса сайта
+def test_urls_post_validation_too_long(monkeypatch):
+    long_url = "https://" + "a" * 250 + ".com"
+    
+    with app.test_client() as client:
+        response = client.post('/urls', data={'url': long_url})
+        assert response.status_code == 200
+        
+        html = response.data.decode('utf-8')
+        assert 'Длина адреса сайта не может быть свыше 255 символов' in html

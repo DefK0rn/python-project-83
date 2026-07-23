@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Анализатор страниц</title>
+    <title>Сайты</title>
     <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
     <style>
         html, body {
@@ -32,30 +32,31 @@
         </div>
     </nav>
 
-    {% if errors %}
-        {% for _, error in errors.items() %}
-            <div class="alert alert-danger rounded-0 border-0 mb-0 py-3 px-4 fs-5" role="alert">
-                {{ error }}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category if category in ['success', 'danger'] else 'primary' }} rounded-0 border-0 mb-0 py-3 px-4 fs-5" role="alert">
+                {{ message }}
             </div>
         {% endfor %}
     {% endif %}
 
-    <main class="container-lg d-flex align-items-start justify-content-center pt-5">
-        <div class="card p-5 w-100 shadow-sm bg-white" style="max-width: 800px;">
-            <div class="card-body p-0">
-                <h1 class="display-4 fw-normal mb-3">Анализатор страниц</h1>
-                <p class="text-muted fs-5 mb-4">Бесплатно проверяйте сайты на SEO-пригодность</p>
-                
-                <form action="/urls" method="post" class="row g-3">
-                    <div class="col">
-                        <input type="url" name="url" class="form-control form-control-lg text-muted" placeholder="https://www.example.com" value="{{ url.url if url else '' }}" required>
-                    </div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary btn-lg px-4 text-uppercase fw-medium">Проверить</button>
-                    </div>
-                </form>
+    <main class="container-lg pt-5 flex-grow-1">
+        
+        <div class="container-lg text-center py-5">
+            
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h1 class="display-1 fw-bold text-secondary">404</h1>
+                    <h2 class="fw-normal mb-3">Сайт не найден</h2>
+                    <p class="text-muted mb-4">
+                        Запрашиваемый сайт не существует или был удален. Проверьте правильность введенного ID в адресной строке.
+                    </p>
+                    <a href="/urls" class="btn btn-primary px-4">Перейти к списку сайтов</a>
+                </div>
             </div>
+
         </div>
+
     </main>
 
     <footer class="border-top py-3 bg-white mt-auto">

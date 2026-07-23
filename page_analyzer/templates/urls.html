@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сайты</title>
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex: 1 0 auto;
+        }
+        footer {
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid container-lg">
+            <div class="navbar-nav me-auto flex-row gap-3">
+                <a class="nav-link text-white-50 fs-5" href="/">Анализатор страниц</a>
+                <a class="nav-link text-white-50 fs-5" href="/urls">Сайты</a>
+            </div>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category if category in ['success', 'danger'] else 'primary' }} rounded-0 border-0 mb-0 py-3 px-4 fs-5" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <main class="container-lg pt-5 flex-grow-1">
+        <h1 class="display-6 fw-normal mb-4">Сайты</h1>
+        
+        <div class="table-responsive bg-white shadow-sm rounded">
+            <table class="table table-bordered table-hover align-middle mb-0" data-test="urls">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col" class="py-3 px-4" style="width: 10%;">ID</th>
+                        <th scope="col" class="py-3 px-4" style="width: 40%;">Имя</th>
+                        <th scope="col" class="py-3 px-4" style="width: 35%;">Последняя проверка</th>
+                        <th scope="col" class="py-3 px-4" style="width: 15%;">Код ответа</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for url in urls %}
+                    <tr>
+                        <th scope="row" class="px-4 text-muted fw-normal">{{ url.id }}</th>
+                        <td class="px-4">
+                            <a href="/urls/{{ url.id }}" class="text-decoration-none text-primary">{{ url.name }}</a>
+                        </td>
+                        <td class="px-4 text-muted">
+                            <!--{{ url.last_check_at if url.last_check_at else '' }}-->
+                            TBD
+                        </td>
+                        <td class="px-4">
+                            <!--{% if url.status_code %}
+                            <span class="badge bg-secondary">{{ url.status_code }}</span>
+                            {% endif %}-->
+                            TBD
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">Список сайтов пока пуст</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="border-top py-3 bg-white mt-auto">
+        <div class="container text-center">
+            <a href="https://hexlet.io" target="_blank" class="text-decoration-none text-primary">Hexlet</a>
+        </div>
+    </footer>
+
+    <script src="https://yastatic.net" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

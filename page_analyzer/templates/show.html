@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сайты</title>
+    <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        main {
+            flex: 1 0 auto;
+        }
+        footer {
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid container-lg">
+            <div class="navbar-nav me-auto flex-row gap-3">
+                <a class="nav-link text-white-50 fs-5" href="/">Анализатор страниц</a>
+                <a class="nav-link text-white-50 fs-5" href="/urls">Сайты</a>
+            </div>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category if category in ['success', 'danger'] else 'primary' }} rounded-0 border-0 mb-0 py-3 px-4 fs-5" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <main class="container-lg pt-5 flex-grow-1">
+        <h1 class="mt-4 mb-3 fw-normal">Сайт: {{ url.name }}</h1>
+        
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr>
+                        <td class="w-25">ID</td>
+                        <td>{{ url.id }}</td>
+                    </tr>
+                    <tr>
+                        <td>Имя</td>
+                        <td>{{ url.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Дата создания</td>
+                        <td>{{ url.created_at }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="mt-5 mb-3 fw-normal">Проверки</h2>
+            
+        <form action="/urls/{{ url.id }}/checks" method="post" class="mb-3">
+            <button type="submit" class="btn btn-primary">Запустить проверку</button>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Код ответа</th>
+                        <th>h1</th>
+                        <th>title</th>
+                        <th>description</th>
+                        <th>Дата создания</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Здесь в будущем будет цикл для вывода проверок url.checks -->
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <footer class="border-top py-3 bg-white mt-auto">
+        <div class="container text-center">
+            <a href="https://hexlet.io" target="_blank" class="text-decoration-none text-primary">Hexlet</a>
+        </div>
+    </footer>
+
+    <script src="https://yastatic.net" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
