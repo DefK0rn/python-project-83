@@ -95,18 +95,18 @@ def validate(url_data):
     print(f"Проверяем на валидность страницу {url_address}")
 
     if not url_address:
-        errors['url'] = "Сайт не может быть пустым"
+        errors['url'] = "Страница не может быть пустой"
     else:
 
         if len(url_address) > 255:
             errors['length'] = \
-                "Длина адреса сайта не может быть свыше 255 символов"
+                "Длина страницы не может быть свыше 255 символов"
 
         if not validators.url(url_address):
-            errors['url'] = "Указанный адрес сайта не прошел валидацию"
+            errors['url'] = "Некорректный URL"
 
         if repo.find_url_by_name(url_address):
-            errors['duple'] = "Указанный адрес сайта был добавлен ранее"
+            errors['duple'] = "Страница уже существует"
 
     return errors
 
