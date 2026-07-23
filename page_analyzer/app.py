@@ -13,6 +13,7 @@ from flask import (
     url_for,
 )
 
+from url_engine import check_url_status
 from url_repository import UrlRepository
 
 load_dotenv()
@@ -113,7 +114,13 @@ def validate(url_data):
 @app.post('/urls/<id>/checks')
 def url_checks_post(id):
 
-    repo.save_check(id)
+    url = repo.find_url_by_id(id)
+    status_code = check_url_status(url['name'])
 
-    flash('Страница успешно проверена', 'success')
+    if not status_code:
+        flash('Произошла ошибка при проверке', 'danger')
+    else:
+        flash('Страница успешно проверена', 'success')
+        repo.save_check(id, status_code)
+    
     return redirect(url_for('urls_show', id=id), code=302)
