@@ -138,6 +138,7 @@ def test_urls_post_validation_empty(monkeypatch):
 
 # Проверяем валидацию сайта
 def test_urls_post_validation_invalid_url(monkeypatch):
+    monkeypatch.setattr(repo, 'find_by_name', MagicMock(return_value=None))
     with app.test_client() as client:
         response = client.post('/urls', data={'url': 'not-a-valid-url'})
         assert response.status_code == 200
@@ -161,6 +162,8 @@ def test_urls_post_validation_duplicate(monkeypatch):
 
 # Проверяем валидацию на длину адреса сайта
 def test_urls_post_validation_too_long(monkeypatch):
+    monkeypatch.setattr(repo, 'find_by_name', MagicMock(return_value=None))
+    
     long_url = "https://" + "a" * 250 + ".com"
     
     with app.test_client() as client:
