@@ -14,6 +14,8 @@
 
 
 ### Description
-This web-application is for site's SEO-test. You can add sites manualy and check them by  one click.
+This web-application is for site's SEO-test. You can add sites manualy and check them by one click.
+
 It is very easy!
-Go and check it out this application on https://python-project-83-ccem.onrender.com/
+
+Go and check out how it works on https://python-project-83-ccem.onrender.com/
