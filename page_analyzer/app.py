@@ -57,6 +57,13 @@ def urls_post():
     errors = validate(url_data)
 
     if errors:
+
+        if errors.get('duple'):
+            url = repo.find_url_by_name(url_data['url'])
+
+            flash('Страница уже существует', 'danger')
+            return redirect(url_for('urls_show', id=url['id']), code=302)
+
         return render_template(
             'index.html',
             url=url_data,

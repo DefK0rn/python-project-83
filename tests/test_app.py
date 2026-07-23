@@ -160,10 +160,12 @@ def test_urls_post_validation_duplicate(monkeypatch):
 
     with app.test_client() as client:
         response = client.post('/urls', data={'url': 'https://hexlet.io'})
-        assert response.status_code == 200
+        assert response.status_code == 302
         
-        html = response.data.decode('utf-8')
-        assert 'Страница уже существует' in html
+        assert response.headers['Location'] == '/urls/1'
+
+        with client.session_transaction() as session:
+            assert ('danger', 'Страница уже существует') in session['_flashes']
 
 
 # Проверяем валидацию на длину адреса сайта
