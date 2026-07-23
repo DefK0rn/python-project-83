@@ -14,8 +14,8 @@ def check_url_status(url_address):
         # Парсим страницу сайта, который проверяем
         if html:
             soup = BeautifulSoup(html, 'html.parser')
-            result['h1'] = soup.h1.text if soup.h1.text else ""
-            result['title'] = soup.title.string if soup.title.string else ""
+            result['h1'] = soup.h1.text if soup.h1 else ""
+            result['title'] = soup.title.string if soup.title else ""
 
             meta_tag = soup.find('meta', attrs={'name': 'description'})
             if meta_tag:
