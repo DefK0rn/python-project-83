@@ -13,7 +13,7 @@ from flask import (
     url_for,
 )
 
-from url_engine import check_url_status
+from url_engine import check_url_status, get_url_host
 from url_repository import UrlRepository
 
 load_dotenv()
@@ -52,6 +52,8 @@ def urls_get():
 def urls_post():
 
     url_data = request.form.to_dict()
+    url_data['url'] = get_url_host(url_data.get('url'))
+
     errors = validate(url_data)
 
     if errors:

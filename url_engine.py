@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -31,3 +33,17 @@ def check_url_status(url_address):
         result['status_code'] = None
 
     return result
+
+
+def get_url_host(url_address):
+    try:
+        parsed_url = urlparse(url_address)
+
+        if parsed_url.scheme and parsed_url.netloc:
+            normalized_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
+        else:
+            normalized_url = url_address
+    except Exception:
+        normalized_url = url_address
+
+    return normalized_url
