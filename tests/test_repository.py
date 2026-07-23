@@ -6,7 +6,7 @@ import pytest
 
 from url_repository import UrlRepository
 
-RUN_LOCAL_DB_TESTS = os.getenv("RUN_LOCAL_DB_TESTS", "false")
+RUN_LOCAL_DB_TESTS = os.getenv("RUN_LOCAL_DB_TESTS", "false").lower() == "true"
 
 
 def get_db_connection():
