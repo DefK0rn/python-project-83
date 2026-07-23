@@ -136,7 +136,7 @@ def test_urls_post_success(monkeypatch):
 def test_urls_post_validation_empty(monkeypatch):
     with app.test_client() as client:
         response = client.post('/urls', data={'url': ''})
-        assert response.status_code == 200
+        assert response.status_code == 422
         
         html = response.data.decode('utf-8')
         assert 'Страница не может быть пустой' in html
@@ -147,7 +147,7 @@ def test_urls_post_validation_invalid_url(monkeypatch):
     monkeypatch.setattr(repo, 'find_url_by_name', MagicMock(return_value=None))
     with app.test_client() as client:
         response = client.post('/urls', data={'url': 'not-a-valid-url'})
-        assert response.status_code == 200
+        assert response.status_code == 422
         
         html = response.data.decode('utf-8')
         assert 'Некорректный URL' in html
@@ -176,7 +176,7 @@ def test_urls_post_validation_too_long(monkeypatch):
     
     with app.test_client() as client:
         response = client.post('/urls', data={'url': long_url})
-        assert response.status_code == 200
+        assert response.status_code == 422
         
         html = response.data.decode('utf-8')
         assert 'Длина страницы не может быть свыше 255 символов' in html

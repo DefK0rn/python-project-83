@@ -70,7 +70,7 @@ def urls_post():
             'index.html',
             url=url_data,
             errors=errors,
-        )
+        ), 422
     
     url_data['id'] = repo.save(url_data)
 
