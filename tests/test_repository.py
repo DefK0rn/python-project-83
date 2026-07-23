@@ -31,6 +31,17 @@ def db_conn():
                     name VARCHAR(255) NOT NULL,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
+
+                CREATE TABLE IF NOT EXISTS url_checks(
+                    id SERIAL PRIMARY KEY,
+                    url_id INTEGER not null,
+                    status_code VARCHAR(3) null,
+                    h1 VARCHAR(255) null,
+                    title VARCHAR(255) null,
+                    "description" VARCHAR(255) null,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY (url_id) REFERENCES urls(id) ON DELETE CASCADE
+                );
             """)
         conn.commit()
 
@@ -38,7 +49,10 @@ def db_conn():
 
     with get_db_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("DROP TABLE IF EXISTS urls;")
+            cur.execute("""
+                DROP TABLE IF EXISTS url_checks;
+                DROP TABLE IF EXISTS urls;
+            """)
         conn.commit()
 
 
@@ -56,7 +70,7 @@ def test_save_new_url(repo):
     assert url_id is not None
     assert url_data['id'] == url_id
 
-    saved_url = repo.find_by_id(url_id)
+    saved_url = repo.find_url_by_id(url_id)
     assert saved_url['name'] == 'https://ru.hexlet.io'
     assert isinstance(saved_url['created_at'], datetime.date)
 
@@ -71,19 +85,19 @@ def test_save_existing_url(repo):
 
     assert url_id == updated_id
     
-    updated_url = repo.find_by_id(url_id)
+    updated_url = repo.find_url_by_id(url_id)
     assert updated_url['name'] == 'https://google.ru'
 
 
 # Тест на поиск по адресу сайта
-def test_find_by_name(repo):
+def test_find_url_by_name(repo):
     repo.save({'url': 'https://github.com'})
 
-    result = repo.find_by_name('https://github.com')
+    result = repo.find_url_by_name('https://github.com')
     assert result is not None
     assert result['name'] == 'https://github.com'
 
-    assert repo.find_by_name('https://non-existent.com') is None
+    assert repo.find_url_by_name('https://non-existent.com') is None
 
 
 # Тест на получение списка сохраненных сайтов
@@ -102,8 +116,8 @@ def test_get_content_ordering(repo):
 def test_destroy(repo):
     url_id = repo.save({'url': 'https://yandex.ru'})
     
-    assert repo.find_by_id(url_id) is not None
+    assert repo.find_url_by_id(url_id) is not None
 
     repo.destroy(url_id)
 
-    assert repo.find_by_id(url_id) is None
+    assert repo.find_url_by_id(url_id) is None

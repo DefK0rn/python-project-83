@@ -71,7 +71,7 @@
         </form>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-striped">
+            <table class="table table-bordered table-striped" data-test="checks">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -83,7 +83,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Здесь в будущем будет цикл для вывода проверок url.checks -->
+                    {% for url_check in url_checks %}
+                    <tr>
+                        <td scope="row" class="px-4 text-muted fw-normal">{{ url_check.id }}</td>
+                        <td class="px-4 text-muted">{{ url_check.status_code if url_check.status_code else '' }}</td>
+                        <td class="px-4 text-muted">{{ url_check.h1 if url_check.h1 else '' }}</td>
+                        <td class="px-4 text-muted">{{ url_check.title if url_check.title else '' }}</td>
+                        <td class="px-4 text-muted">{{ url_check.description if url_check.description else '' }}</td>
+                        <td class="px-4 text-muted">{{ url_check.created_at if url_check.created_at else '' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Список проверок пока пуст</td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

@@ -79,12 +79,12 @@ def test_urls_get_page(monkeypatch):
 
 # Проверяем страницу сайта по id
 def test_urls_show_page_success(monkeypatch):
-    mock_find_by_id = MagicMock(return_value={
+    mock_find_url_by_id = MagicMock(return_value={
         'id': 42, 
         'name': 'https://github.com', 
         'created_at': '2026-02-22'
     })
-    monkeypatch.setattr(repo, 'find_by_id', mock_find_by_id)
+    monkeypatch.setattr(repo, 'find_url_by_id', mock_find_url_by_id)
 
     with app.test_client() as client:
         response = client.get('/urls/42')
@@ -93,14 +93,14 @@ def test_urls_show_page_success(monkeypatch):
         html = response.data.decode('utf-8')
         assert 'Сайт: https://github.com' in html
         assert '42' in html
-        mock_find_by_id.assert_called_once_with('42')
+        mock_find_url_by_id.assert_called_once_with('42')
 
 
 # Проверяем ошибку 404, когда id нет в базе
 def test_urls_show_page_not_found(monkeypatch):
 
-    mock_find_by_id = MagicMock(return_value=None)
-    monkeypatch.setattr(repo, 'find_by_id', mock_find_by_id)
+    mock_find_url_by_id = MagicMock(return_value=None)
+    monkeypatch.setattr(repo, 'find_url_by_id', mock_find_url_by_id)
 
     with app.test_client() as client:
         response = client.get('/urls/999')
@@ -114,7 +114,7 @@ def test_urls_show_page_not_found(monkeypatch):
 
 # Проверяем успех добавления сайта
 def test_urls_post_success(monkeypatch):
-    monkeypatch.setattr(repo, 'find_by_name', MagicMock(return_value=None))
+    monkeypatch.setattr(repo, 'find_url_by_name', MagicMock(return_value=None))
     
     mock_save = MagicMock(return_value=100)
     monkeypatch.setattr(repo, 'save', mock_save)
@@ -138,7 +138,7 @@ def test_urls_post_validation_empty(monkeypatch):
 
 # Проверяем валидацию сайта
 def test_urls_post_validation_invalid_url(monkeypatch):
-    monkeypatch.setattr(repo, 'find_by_name', MagicMock(return_value=None))
+    monkeypatch.setattr(repo, 'find_url_by_name', MagicMock(return_value=None))
     with app.test_client() as client:
         response = client.post('/urls', data={'url': 'not-a-valid-url'})
         assert response.status_code == 200
@@ -149,8 +149,8 @@ def test_urls_post_validation_invalid_url(monkeypatch):
 
 # Проверяем валидацию на уникальность сайта
 def test_urls_post_validation_duplicate(monkeypatch):
-    mock_find_by_name = MagicMock(return_value={'id': 1, 'name': 'https://hexlet.io'})
-    monkeypatch.setattr(repo, 'find_by_name', mock_find_by_name)
+    mock_find_url_by_name = MagicMock(return_value={'id': 1, 'name': 'https://hexlet.io'})
+    monkeypatch.setattr(repo, 'find_url_by_name', mock_find_url_by_name)
 
     with app.test_client() as client:
         response = client.post('/urls', data={'url': 'https://hexlet.io'})
@@ -162,8 +162,8 @@ def test_urls_post_validation_duplicate(monkeypatch):
 
 # Проверяем валидацию на длину адреса сайта
 def test_urls_post_validation_too_long(monkeypatch):
-    monkeypatch.setattr(repo, 'find_by_name', MagicMock(return_value=None))
-    
+    monkeypatch.setattr(repo, 'find_url_by_name', MagicMock(return_value=None))
+
     long_url = "https://" + "a" * 250 + ".com"
     
     with app.test_client() as client:

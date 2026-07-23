@@ -69,14 +69,16 @@ def urls_post():
 @app.route('/urls/<id>')
 def urls_show(id):
 
-    url = repo.find_by_id(id)
+    url = repo.find_url_by_id(id)
+    url_checks = repo.find_checks_by_url_id(id)
 
     if not url:
         abort(404)
 
     return render_template(
         'show.html',
-        url=url
+        url=url,
+        url_checks=url_checks
     )
 
 
@@ -102,7 +104,16 @@ def validate(url_data):
         if not validators.url(url_address):
             errors['url'] = "Указанный адрес сайта не прошел валидацию"
 
-        if repo.find_by_name(url_address):
+        if repo.find_url_by_name(url_address):
             errors['duple'] = "Указанный адрес сайта был добавлен ранее"
 
     return errors
+
+
+@app.post('/urls/<id>/checks')
+def url_checks_post(id):
+
+    repo.save_check(id)
+
+    flash('Страница успешно проверена', 'success')
+    return redirect(url_for('urls_show', id=id), code=302)

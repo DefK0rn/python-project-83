@@ -58,20 +58,12 @@
                 <tbody>
                     {% for url in urls %}
                     <tr>
-                        <th scope="row" class="px-4 text-muted fw-normal">{{ url.id }}</th>
+                        <td scope="row" class="px-4 text-muted fw-normal">{{ url.id }}</td>
                         <td class="px-4">
                             <a href="/urls/{{ url.id }}" class="text-decoration-none text-primary">{{ url.name }}</a>
                         </td>
-                        <td class="px-4 text-muted">
-                            <!--{{ url.last_check_at if url.last_check_at else '' }}-->
-                            TBD
-                        </td>
-                        <td class="px-4">
-                            <!--{% if url.status_code %}
-                            <span class="badge bg-secondary">{{ url.status_code }}</span>
-                            {% endif %}-->
-                            TBD
-                        </td>
+                        <td class="px-4 text-muted">{{ url.check_created_at if url.check_created_at else ''}}</td>
+                        <td class="px-4 text-muted">{{ url.status_code if url.status_code else '' }}</td>
                     </tr>
                     {% else %}
                     <tr>
