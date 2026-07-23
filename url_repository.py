@@ -115,13 +115,25 @@ class UrlRepository:
                 """, (url_id,))
                 return cur.fetchall()
 
-    def save_check(self, url_id, status_code):
+    def save_check(self, url_id, url_status):
         with self.get_conn() as conn:
             with conn.cursor() as cur:
-                cur.execute(
-                    """INSERT INTO url_checks (url_id, status_code)
-                    VALUES (%s, %s) RETURNING id
-                """, (url_id, status_code,))
+                cur.execute("""
+                    INSERT INTO url_checks(
+                        url_id,
+                        status_code,
+                        h1,
+                        title,
+                        description
+                    )
+                    VALUES (%s, %s, %s, %s, %s) RETURNING id
+                """, (
+                    url_id,
+                    url_status['status_code'],
+                    url_status['h1'],
+                    url_status['title'],
+                    url_status['description'],
+                ))
                 url_check_id = cur.fetchone()[0]
                 conn.commit()
                 return url_check_id
