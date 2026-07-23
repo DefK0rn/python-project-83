@@ -6,6 +6,8 @@ import pytest
 
 from url_repository import UrlRepository
 
+RUN_LOCAL_DB_TESTS = os.getenv("RUN_LOCAL_DB_TESTS", "false")
+
 
 def get_db_connection():
 
@@ -16,6 +18,10 @@ def get_db_connection():
 
 @pytest.fixture()
 def db_conn():
+
+    # Заглушка для gitHub
+    if not RUN_LOCAL_DB_TESTS:
+        pytest.skip("Тесты базы данных пропускаются в этой среде ")
     
     with get_db_connection() as conn:
         with conn.cursor() as cur:
