@@ -22,7 +22,7 @@ def check_url_status(url_address):
         if html:
             soup = BeautifulSoup(html, 'html.parser')
             result['h1'] = soup.h1.text[:255] if soup.h1 else ""
-            result['title'] = soup.title.string[:255] if soup.title else ""
+            result['title'] = soup.title.text[:255] if soup.title else ""
 
             meta_tag = soup.find('meta', attrs={'name': 'description'})
             if meta_tag:
